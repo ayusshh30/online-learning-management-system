@@ -50,7 +50,7 @@ How to Run the Project
 1. Clone the Repository
 bash
 Copy code
-git clone https://github.com/ayusshh30/olms.git
+git clone https://github.com/ayusshh30/online-learning-management-system
 2. Navigate to the Project Directory
 bash
 Copy code
