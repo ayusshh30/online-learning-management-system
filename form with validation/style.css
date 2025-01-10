@@ -1,0 +1,11 @@
+input.is-invalid {
+    border-color: #dc3545;
+}
+
+input.is-valid {
+    border-color: #28a745;
+}
+
+.error-message {
+    font-size: 0.85rem;
+}
