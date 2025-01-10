@@ -1,21 +1,17 @@
-// JavaScript for OLMS Form Validation and Interactivity
+// JavaScript for OLMS with Live Input Feedback and Dynamic Error Messages
 
 // Helper Function to Show Error Messages
 function showError(input, message) {
     const parent = input.parentElement;
-    if (!parent.classList.contains('position-relative')) {
-        parent.classList.add('position-relative');
-    }
     let error = parent.querySelector('.error-message');
     if (!error) {
         error = document.createElement('div');
-        error.className = 'error-message text-danger position-absolute';
-        error.style.top = '100%';
-        error.style.left = '0';
+        error.className = 'error-message text-danger small';
         parent.appendChild(error);
     }
     error.textContent = message;
     input.classList.add('is-invalid');
+    input.classList.remove('is-valid');
 }
 
 // Helper Function to Show Success
@@ -34,7 +30,7 @@ function validateEmail(input) {
         showSuccess(input);
         return true;
     } else {
-        showError(input, 'Invalid email address');
+        showError(input, 'Please enter a valid email address.');
         return false;
     }
 }
@@ -43,28 +39,29 @@ function validateEmail(input) {
 function validatePassword(input) {
     const minLength = 8;
     const password = input.value.trim();
+
     if (password.length < minLength) {
-        showError(input, `Password must be at least ${minLength} characters`);
+        showError(input, `Password must be at least ${minLength} characters.`);
         return false;
     }
     if (!/[A-Z]/.test(password)) {
-        showError(input, 'Password must contain at least one uppercase letter');
+        showError(input, 'Password must include at least one uppercase letter.');
         return false;
     }
     if (!/[a-z]/.test(password)) {
-        showError(input, 'Password must contain at least one lowercase letter');
+        showError(input, 'Password must include at least one lowercase letter.');
         return false;
     }
     if (!/[0-9]/.test(password)) {
-        showError(input, 'Password must contain at least one digit');
+        showError(input, 'Password must include at least one digit.');
         return false;
     }
     showSuccess(input);
     return true;
 }
 
-// Real-time Validation for Inputs
-function attachRealTimeValidation() {
+// Live Validation
+function addLiveValidation() {
     const emailInputs = document.querySelectorAll('input[type="email"]');
     const passwordInputs = document.querySelectorAll('input[type="password"]');
 
@@ -77,7 +74,7 @@ function attachRealTimeValidation() {
     });
 }
 
-// Form Submission Validation
+// Form Validation on Submission
 function validateForm(event) {
     const form = event.target;
     const email = form.querySelector('input[type="email"]');
@@ -88,29 +85,14 @@ function validateForm(event) {
     if (!validatePassword(password)) isValid = false;
 
     if (!isValid) {
-        event.preventDefault(); // Prevent submission if validation fails
+        event.preventDefault(); // Prevent form submission if validation fails
     }
 }
 
-// Interactive Navbar Highlight
-function highlightActiveLink() {
-    const links = document.querySelectorAll('.nav-link');
-    links.forEach((link) => {
-        link.addEventListener('click', () => {
-            links.forEach((l) => l.classList.remove('active'));
-            link.classList.add('active');
-        });
-    });
-}
-
-// Event Listeners
+// Attach Event Listeners on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-    attachRealTimeValidation();
+    addLiveValidation();
 
-    // Add form validation to all forms
     const forms = document.querySelectorAll('form');
     forms.forEach((form) => form.addEventListener('submit', validateForm));
-
-    // Navbar link interactivity
-    highlightActiveLink();
 });
