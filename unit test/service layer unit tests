@@ -1,0 +1,43 @@
+@SpringBootTest
+public class UserServiceTest {
+
+    @Autowired
+    private UserService userService;
+
+    @MockBean
+    private UserRepository userRepository;
+
+    @Test
+    public void testRegisterUser_Success() {
+        // Arrange
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail("test@example.com");
+        userDTO.setPassword("Password123");
+
+        User user = new User();
+        user.setId(1L);
+        user.setEmail(userDTO.getEmail());
+
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        // Act
+        User registeredUser = userService.registerUser(userDTO);
+
+        // Assert
+        assertNotNull(registeredUser);
+        assertEquals(userDTO.getEmail(), registeredUser.getEmail());
+    }
+
+    @Test
+    public void testRegisterUser_EmailAlreadyExists() {
+        // Arrange
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail("test@example.com");
+        userDTO.setPassword("Password123");
+
+        when(userRepository.existsByEmail(userDTO.getEmail())).thenReturn(true);
+
+        // Act & Assert
+        assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(userDTO));
+    }
+}
