@@ -1,0 +1,39 @@
+document.getElementById('registrationForm').addEventListener('submit', function (event) {
+    let isValid = true;
+
+    // Validate Email
+    const emailInput = document.getElementById('email');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailInput.value.trim())) {
+        showError(emailInput, 'Invalid email address.');
+        isValid = false;
+    } else {
+        showSuccess(emailInput);
+    }
+
+    // Validate Password
+    const passwordInput = document.getElementById('password');
+    const password = passwordInput.value.trim();
+    if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+        showError(passwordInput, 'Password must be at least 8 characters and include uppercase, lowercase, and a number.');
+        isValid = false;
+    } else {
+        showSuccess(passwordInput);
+    }
+
+    // Prevent Form Submission if Validation Fails
+    if (!isValid) event.preventDefault();
+});
+
+// Helper Functions
+function showError(input, message) {
+    const errorDiv = input.nextElementSibling;
+    errorDiv.textContent = message;
+    input.classList.add('is-invalid');
+}
+
+function showSuccess(input) {
+    const errorDiv = input.nextElementSibling;
+    errorDiv.textContent = '';
+    input.classList.remove('is-invalid');
+}
