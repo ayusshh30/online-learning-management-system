@@ -1,0 +1,30 @@
+import java.util.Scanner;
+
+public class ConsoleValidation {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            // Email Validation
+            System.out.print("Enter your email: ");
+            String email = scanner.nextLine();
+            if (!email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+                throw new IllegalArgumentException("Invalid email format.");
+            }
+
+            // Password Validation
+            System.out.print("Enter your password: ");
+            String password = scanner.nextLine();
+            if (password.length() < 8 || !password.matches(".*[A-Z].*") || !password.matches(".*[a-z].*") || !password.matches(".*\\d.*")) {
+                throw new IllegalArgumentException("Password must be at least 8 characters long and include uppercase, lowercase, and a number.");
+            }
+
+            System.out.println("Validation successful!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            scanner.close();
+        }
+    }
+}
