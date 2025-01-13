@@ -1,0 +1,14 @@
+Scanner scanner = new Scanner(System.in);
+try {
+    System.out.print("Enter course ID: ");
+    int courseId = scanner.nextInt();
+    if (courseId <= 0) {
+        throw new IllegalArgumentException("Course ID must be positive.");
+    }
+} catch (InputMismatchException e) {
+    System.out.println("Invalid input. Please enter a number.");
+} catch (IllegalArgumentException e) {
+    System.out.println(e.getMessage());
+} finally {
+    scanner.close();
+}
