@@ -1,0 +1,36 @@
+@WebMvcTest(UserController.class)
+public class UserControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private UserService userService;
+
+    @Test
+    public void testRegisterUser_Success() throws Exception {
+        // Arrange
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail("test@example.com");
+        userDTO.setPassword("Password123");
+
+        when(userService.registerUser(any(UserDTO.class))).thenReturn(new User(1L, "test@example.com"));
+
+        // Act & Assert
+        mockMvc.perform(post("/api/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"test@example.com\", \"password\":\"Password123\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value("test@example.com"));
+    }
+
+    @Test
+    public void testRegisterUser_InvalidEmail() throws Exception {
+        // Act & Assert
+        mockMvc.perform(post("/api/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"invalid-email\", \"password\":\"Password123\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Invalid email format")));
+    }
+}
