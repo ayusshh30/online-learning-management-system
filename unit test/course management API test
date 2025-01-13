@@ -1,0 +1,32 @@
+@WebMvcTest(CourseController.class)
+public class CourseControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private CourseService courseService;
+
+    @Test
+    public void testGetCourseById_Success() throws Exception {
+        // Arrange
+        Course course = new Course(1L, "Introduction to Java");
+        when(courseService.getCourseById(1L)).thenReturn(course);
+
+        // Act & Assert
+        mockMvc.perform(get("/api/courses/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Introduction to Java"));
+    }
+
+    @Test
+    public void testGetCourseById_NotFound() throws Exception {
+        // Arrange
+        when(courseService.getCourseById(999L)).thenThrow(new ResourceNotFoundException("Course not found"));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/courses/999"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Course not found")));
+    }
+}
