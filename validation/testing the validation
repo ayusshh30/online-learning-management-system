@@ -1,0 +1,19 @@
+@SpringBootTest
+public class UserServiceTest {
+
+    @Autowired
+    private UserService userService;
+
+    @Test
+    public void testInvalidEmail() {
+        UserDTO user = new UserDTO();
+        user.setEmail("invalid-email");
+        user.setPassword("Password123");
+
+        Exception exception = assertThrows(ConstraintViolationException.class, () -> {
+            userService.registerUser(user);
+        });
+
+        assertTrue(exception.getMessage().contains("Invalid email format"));
+    }
+}
