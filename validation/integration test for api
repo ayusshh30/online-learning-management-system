@@ -1,0 +1,17 @@
+@WebMvcTest(UserController.class)
+public class UserControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    public void testInvalidUserRegistration() throws Exception {
+        String invalidUserJson = "{ \"email\": \"invalid\", \"password\": \"123\" }";
+
+        mockMvc.perform(post("/api/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(invalidUserJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Invalid email format")));
+    }
+}
